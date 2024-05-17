@@ -5,15 +5,16 @@ $userName = "root";
 $password = "";
 $dataBase = "todolist";
 
-$insert = false;
-$update = false;
-$delete = false;
-
 $conn = mysqli_connect($serverName, $userName, $password, $dataBase);
 
 if (!$conn) {
   die("Sorry we failed to connect..." . mysqli_connect_error($conn));
 }
+
+$insert = false;
+$update = false;
+$delete = false;
+
 ?>
 
 <!DOCTYPE html>
@@ -96,11 +97,11 @@ if (!$conn) {
   <?php
 
   //delete note
-  if(isset($_GET['delete'])){
+  if (isset($_GET['delete'])) {
     $sno = $_GET['delete'];
     $delete = true;
     $sql = "DELETE FROM `notes` WHERE `sno` = $sno";
-    $result = mysqli_query($conn,$sql);
+    $result = mysqli_query($conn, $sql);
 
     if ($result) {
       $delete = true;
@@ -112,7 +113,6 @@ if (!$conn) {
     } else {
       echo "Unable to delete note";
     }
-
   }
 
 
@@ -137,14 +137,12 @@ if (!$conn) {
       } else {
         echo "Unable to update note";
       }
-      
-
     } else {
-      // add note
-      $title = $_POST['title'];
-      $description = $_POST['description'];
-      $sql = "INSERT INTO `notes` (`title`, `description`) VALUES ('$title', '$description')";
-      $result = mysqli_query($conn, $sql);
+      // add note to DB
+      $title = $_POST['title']; //fetching title of note from UI
+      $description = $_POST['description']; //fetching description of note from UI
+      $sql = "INSERT INTO `notes` (`title`, `description`) VALUES ('$title', '$description')"; //insertion query
+      $result = mysqli_query($conn, $sql); //execution of query
 
       if ($result) {
         $insert = true;
@@ -162,7 +160,7 @@ if (!$conn) {
 
 
 
-  <!--Add Notes-->
+  <!--Write Notes-->
   <div class="container my-4">
     <h2>Write your Note</h2>
     <form action="/TODO LIST/index.php" method="post">
@@ -204,7 +202,7 @@ if (!$conn) {
 
         $sql = "SELECT * from `notes`";
         $result = mysqli_query($conn, $sql);
-        $sno = 0;
+        $sno = 0; //for serial number of notes
         while ($row = mysqli_fetch_assoc($result)) {
           $sno = $sno + 1;
           echo "<tr>
@@ -231,7 +229,7 @@ if (!$conn) {
 </script>
 
 <script>
-  //Fetching note for edit(logic)
+  //Fetching note for edit(JS logic)
   edits = document.getElementsByClassName('edit');
   Array.from(edits).forEach((element) => {
     element.addEventListener("click", (e) => {
@@ -253,15 +251,15 @@ if (!$conn) {
   Array.from(deletes).forEach((element) => {
     element.addEventListener("click", (e) => {
       console.log("delete ", e.target.parentNode.parentNode);
-      sno = e.target.id.substr(1,);
+      sno = e.target.id.substr(1, );
 
-      if(confirm("Do yo want to delete this note?")){
+      if (confirm("Do yo want to delete this note?")) {
         console.log('yes');
         window.location = `/ToDo List/index.php?delete=${sno}`;
-      }else{
+      } else {
         console.log('no');
       }
-      
+
     })
   })
 </script>
